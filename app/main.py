@@ -1,4 +1,5 @@
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import RedirectResponse
 
 from pydantic import BaseModel
 
@@ -19,6 +20,11 @@ app = FastAPI(
 
 class NotesRequest(BaseModel):
     notes: list[str]
+
+
+@app.get("/", include_in_schema=False)
+def docs_redirect():
+    return RedirectResponse(url="/docs")
 
 
 @app.get("/health")
