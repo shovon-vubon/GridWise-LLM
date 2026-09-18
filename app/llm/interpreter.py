@@ -205,10 +205,13 @@ def interpret_notes(notes):
     except Exception as exc:
         logger.exception("Groq failed: %s", exc)
         logger.info("Falling back to Gemini...")
+        groq_error = str(exc)
 
     try:
         return call_gemini(notes)
 
     except Exception as exc:
         logger.exception("Gemini failed: %s", exc)
-        raise Exception("All LLM providers failed")
+        raise Exception(
+            f"All LLM providers failed. Groq: {groq_error}. Gemini: {exc}"
+        ) from exc
