@@ -1,0 +1,92 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>GridWise | Energy Control Room</title>
+  <style>
+    @import url('https://fonts.googleapis.com/css2?family=DM+Mono:wght@400;500&family=Manrope:wght@400;600;700;800&display=swap');
+    :root { --ink:#102a2c; --muted:#6d8584; --line:#d8e6e2; --paper:#f4f8f5; --white:#fff; --teal:#087f78; --teal-dark:#075a58; --lime:#d9f36b; --orange:#e8845a; --yellow:#f7c95e; }
+    * { box-sizing:border-box; }
+    body { margin:0; color:var(--ink); background:var(--paper); font-family:Manrope, sans-serif; }
+    .shell { max-width:1440px; margin:auto; padding:30px 42px 48px; }
+    header { display:flex; justify-content:space-between; align-items:center; margin-bottom:42px; }
+    .brand { display:flex; align-items:center; gap:12px; font-weight:800; letter-spacing:-.04em; font-size:20px; }
+    .mark { width:30px; height:30px; display:grid; place-items:center; color:var(--ink); background:var(--lime); border-radius:9px; font-size:17px; }
+    .status { display:flex; align-items:center; gap:9px; color:var(--muted); font:500 12px 'DM Mono', monospace; text-transform:uppercase; letter-spacing:.07em; }
+    .pulse { width:8px; height:8px; border-radius:50%; background:#4ebc75; box-shadow:0 0 0 5px #dff1d9; }
+    .hero { display:grid; grid-template-columns:minmax(0, 1.35fr) minmax(330px, .65fr); gap:34px; align-items:end; margin-bottom:30px; }
+    .eyebrow { color:var(--teal); font:500 12px 'DM Mono', monospace; letter-spacing:.1em; text-transform:uppercase; margin-bottom:13px; }
+    h1 { max-width:780px; margin:0; font-size:clamp(38px, 5vw, 74px); line-height:.99; letter-spacing:-.075em; }
+    .intro { color:var(--muted); line-height:1.7; font-size:14px; max-width:380px; margin:0 0 5px auto; }
+    .grid { display:grid; grid-template-columns:repeat(4, 1fr); gap:13px; margin-bottom:28px; }
+    .metric { min-height:132px; padding:20px; background:var(--white); border:1px solid var(--line); border-radius:12px; }
+    .metric.accent { background:var(--teal); color:white; border-color:var(--teal); }
+    .metric-label { color:var(--muted); font:500 11px 'DM Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+    .accent .metric-label { color:#b8dcda; }
+    .metric-value { margin-top:23px; font-size:30px; font-weight:800; letter-spacing:-.06em; }
+    .metric-value small { font:500 12px 'DM Mono', monospace; letter-spacing:0; opacity:.7; }
+    .workspace { display:grid; grid-template-columns:330px minmax(0, 1fr); gap:13px; align-items:start; }
+    .panel { background:var(--white); border:1px solid var(--line); border-radius:12px; padding:22px; }
+    .panel h2 { font-size:16px; margin:0 0 20px; letter-spacing:-.03em; }
+    label { display:block; margin:16px 0 7px; color:var(--muted); font:500 10px 'DM Mono', monospace; text-transform:uppercase; letter-spacing:.08em; }
+    input, textarea { width:100%; border:1px solid var(--line); border-radius:7px; background:#f8fbf9; color:var(--ink); padding:11px 12px; font:500 13px Manrope, sans-serif; outline:none; }
+    input:focus, textarea:focus { border-color:var(--teal); box-shadow:0 0 0 3px #dff1ed; }
+    textarea { height:92px; resize:vertical; line-height:1.6; }
+    .button-row { display:flex; gap:8px; margin-top:19px; }
+    button { border:0; border-radius:7px; cursor:pointer; padding:12px 15px; font:700 12px Manrope, sans-serif; }
+    .primary { flex:1; color:white; background:var(--teal); }
+    .primary:hover { background:var(--teal-dark); }
+    .ghost { background:#edf5f1; color:var(--teal-dark); }
+    .message { min-height:18px; margin-top:14px; color:var(--muted); font-size:11px; line-height:1.5; }
+    .table-panel { min-width:0; padding:0; overflow:hidden; }
+    .table-head { display:flex; justify-content:space-between; padding:22px 22px 14px; align-items:center; }
+    .table-head h2 { margin:0; font-size:16px; letter-spacing:-.03em; }
+    .table-head span { color:var(--muted); font:500 11px 'DM Mono', monospace; }
+    .table-wrap { overflow-x:auto; }
+    table { width:100%; border-collapse:collapse; font-size:12px; white-space:nowrap; }
+    th { color:var(--muted); background:#f7faf8; font:500 10px 'DM Mono', monospace; text-align:right; text-transform:uppercase; letter-spacing:.05em; }
+    th, td { padding:13px 14px; border-top:1px solid #edf2ef; text-align:right; }
+    th:first-child, td:first-child { text-align:left; padding-left:22px; }
+    td { font-family:'DM Mono', monospace; }
+    .legend { display:flex; gap:16px; padding:15px 22px 20px; color:var(--muted); font-size:11px; }
+    .legend span { display:flex; align-items:center; gap:5px; } .legend i { width:7px; height:7px; border-radius:50%; display:inline-block; }
+    .solar { background:var(--yellow); } .grid-import { background:var(--orange); } .battery { background:var(--teal); }
+    @media (max-width: 850px) { .shell { padding:22px 18px 35px; } header { margin-bottom:30px; } .hero { grid-template-columns:1fr; gap:18px; } .intro { margin:0; } .grid { grid-template-columns:repeat(2,1fr); } .workspace { grid-template-columns:1fr; } }
+    @media (max-width: 440px) { .grid { gap:8px; } .metric { min-height:112px; padding:14px; } .metric-value { margin-top:17px; font-size:24px; } }
+  </style>
+</head>
+<body>
+  <main class="shell">
+    <header><div class="brand"><span class="mark">↯</span> GRIDWISE</div><div class="status"><span class="pulse"></span> optimizer online</div></header>
+    <section class="hero"><div><div class="eyebrow">Energy control room / live scenario</div><h1>Make every kilowatt count.</h1></div><p class="intro">Translate operator intent into a feasible battery schedule. Watch the grid, solar, and cost story change hour by hour.</p></section>
+    <section class="grid">
+      <article class="metric accent"><div class="metric-label">Scenario cost</div><div class="metric-value" id="cost">-- <small>BDT</small></div></article>
+      <article class="metric"><div class="metric-label">Grid import</div><div class="metric-value" id="grid">-- <small>kWh</small></div></article>
+      <article class="metric"><div class="metric-label">Solar used</div><div class="metric-value" id="solar">-- <small>kWh</small></div></article>
+      <article class="metric"><div class="metric-label">Battery peak</div><div class="metric-value" id="peak">-- <small>kWh</small></div></article>
+    </section>
+    <section class="workspace">
+      <aside class="panel">
+        <h2>Scenario controls</h2>
+        <label for="scenario">Scenario ID</label><input id="scenario" value="morning-peak-01">
+        <label for="notes">Operator notes</label><textarea id="notes">Keep battery reserve above 20 kWh during the evening peak.
+Prefer solar when available.</textarea>
+        <div class="button-row"><button class="primary" id="run">Run optimization</button><button class="ghost" id="sample">Reset</button></div>
+        <div class="message" id="message">Sample schedule loaded. Run the optimizer to connect to the API.</div>
+      </aside>
+      <section class="panel table-panel"><div class="table-head"><h2>Dispatch schedule</h2><span id="schedule-status">DEMO DATA / 12 HOURS</span></div><div class="table-wrap"><table><thead><tr><th>Hour</th><th>Demand</th><th>Solar</th><th>Grid</th><th>Battery</th><th>Flow</th><th>Tariff</th></tr></thead><tbody id="rows"></tbody></table></div><div class="legend"><span><i class="solar"></i> solar</span><span><i class="grid-import"></i> grid</span><span><i class="battery"></i> battery energy</span></div></section>
+    </section>
+  </main>
+  <script>
+    const sampleHours = Array.from({length:12}, (_, hour) => ({ hour, demand_kwh: hour < 5 ? 22 : hour < 9 ? 30 : 38, solar_kwh: hour < 3 ? 0 : hour < 9 ? 24 : 9, tariff_bdt_per_kwh: hour >= 8 ? 13.5 : 8.5 }));
+    const sampleResult = { objective_cost_bdt: 3732.7, schedule: sampleHours.map((item, hour) => ({ ...item, solar_generation_kwh:item.solar_kwh, solar_used_kwh:Math.min(item.solar_kwh, item.demand_kwh), grid_import_kwh:Math.max(0, item.demand_kwh - item.solar_kwh), charge_kwh:hour > 3 && hour < 6 ? 4 : 0, discharge_kwh:hour >= 9 ? 4 : 0, battery_energy_kwh:40 - Math.max(0, hour - 8) * 4 })) };
+    const el = id => document.getElementById(id);
+    function render(result) { const schedule = result.schedule || []; const total = key => schedule.reduce((sum, row) => sum + Number(row[key] || 0), 0); el('cost').innerHTML = `${Number(result.objective_cost_bdt || 0).toFixed(0)} <small>BDT</small>`; el('grid').innerHTML = `${total('grid_import_kwh').toFixed(1)} <small>kWh</small>`; el('solar').innerHTML = `${total('solar_used_kwh').toFixed(1)} <small>kWh</small>`; el('peak').innerHTML = `${Math.max(...schedule.map(row => Number(row.battery_energy_kwh || 0)), 0).toFixed(1)} <small>kWh</small>`; el('rows').innerHTML = schedule.map(row => { const flow = row.charge_kwh ? `+${row.charge_kwh.toFixed(1)}` : row.discharge_kwh ? `-${row.discharge_kwh.toFixed(1)}` : '-'; return `<tr><td>${String(row.hour).padStart(2,'0')}:00</td><td>${row.demand_kwh.toFixed(1)}</td><td>${row.solar_used_kwh.toFixed(1)}</td><td>${row.grid_import_kwh.toFixed(1)}</td><td>${row.battery_energy_kwh.toFixed(1)}</td><td>${flow}</td><td>${row.tariff_bdt_per_kwh.toFixed(1)}</td></tr>`; }).join(''); }
+    function payload() { return { scenario_id:el('scenario').value, operator_notes:el('notes').value.split('\n').filter(Boolean), hours:sampleHours, battery:{ capacity_kwh:50, initial_energy_kwh:40, minimum_energy_kwh:10, max_charge_kwh_per_hour:8, max_discharge_kwh_per_hour:8 } }; }
+    el('run').onclick = async () => { el('run').disabled = true; el('message').textContent = 'Solving scenario...'; try { const response = await fetch('/optimize-energy', { method:'POST', headers:{'Content-Type':'application/json'}, body:JSON.stringify(payload()) }); const data = await response.json(); if (!response.ok) throw new Error(data.detail || 'Optimization failed'); render(data.optimization); el('schedule-status').textContent = `LIVE / ${data.scenario_id}`; el('message').textContent = data.validation_warnings?.length ? data.validation_warnings.join(' ') : 'Schedule solved successfully.'; } catch (error) { el('message').textContent = error.message; } finally { el('run').disabled = false; } };
+    el('sample').onclick = () => { el('scenario').value = 'morning-peak-01'; el('notes').value = 'Keep battery reserve above 20 kWh during the evening peak.\nPrefer solar when available.'; render(sampleResult); el('schedule-status').textContent = 'DEMO DATA / 12 HOURS'; el('message').textContent = 'Sample schedule loaded. Run the optimizer to connect to the API.'; };
+    render(sampleResult);
+  </script>
+</body>
+</html>
