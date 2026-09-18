@@ -3,6 +3,7 @@ uvicorn
 python-dotenv
 pydantic
 openai
+google-genai
 ortools
 numpy
 pytest
