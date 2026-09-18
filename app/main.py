@@ -1,4 +1,7 @@
+from pathlib import Path
+
 from fastapi import FastAPI, HTTPException
+from fastapi.responses import FileResponse
 
 from pydantic import BaseModel
 
@@ -16,6 +19,8 @@ app = FastAPI(
     version="1.0.0",
 )
 
+BASE_DIR = Path(__file__).resolve().parent
+
 
 class NotesRequest(BaseModel):
     notes: list[str]
@@ -26,6 +31,11 @@ def health_check():
     return {
         "status": "ok",
     }
+
+
+@app.get("/dashboard", include_in_schema=False)
+def dashboard():
+    return FileResponse(BASE_DIR / "dashboard.html")
 
 
 @app.post("/test-llm")
